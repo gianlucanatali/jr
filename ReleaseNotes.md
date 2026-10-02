@@ -1,3 +1,6 @@
+Unreleased
+- added SQL producers (postgres, mysql, generic sql) with insert and named-parameter statement modes
+
 v0.3.9
 - added key calculation directly from the template value
 - added distributed JR with Locust and K6

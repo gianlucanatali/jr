@@ -177,12 +177,60 @@ GCS (--output = gcs)
 AZBlobStorage (--output = azblobstorage)
 AZCosmosDB (--output = azcosmosdb)
 Cassandra (--output = cassandra)
+PostgreSQL (--output = postgres)
+MySQL (--output = mysql)
+SQL (generic, driver in config) (--output = sql)
 LUA Script (--output = luascript)
 WASM Function (--output = wasm)
 AWS DynamoDB (--output = awsdynamodb)
 
 ```
 to use a producer, just set the corresponding value in `--output`
+
+### SQL databases (PostgreSQL, MySQL)
+
+`--output postgres`, `--output mysql` and `--output sql` write the generated records to a SQL database, using
+[pgx](https://github.com/jackc/pgx) and the MySQL `database/sql` driver. `--output sql` is the generic form:
+the driver (`pgx` or `mysql`) is read from the configuration file. The configuration file is given with `--sqlConfig`.
+
+The generated value must be a JSON object. There are two modes, chosen by the configuration (exactly one of `table` or `statement`):
+
+- `statement`: a parameterised statement with named placeholders (`:name`). Every `:name` is bound from the field with
+  the same name in the generated record, so you can run `UPDATE`, `UPSERT` or `DELETE` workloads, not only `INSERT`s.
+  Values are always sent as bind parameters (`$1..$n` for PostgreSQL, `?` for MySQL) and never interpolated in the SQL text.
+  `::` casts, quoted strings and identifiers, dollar-quoted strings and comments are left untouched. A placeholder without
+  a matching field is an error. `:_key` and `:_value` are bound to the generated key and (raw JSON) value, unless the record has a field with that name.
+- `table`: every record is inserted as a row, its top-level fields being the columns (`schema.table` is accepted).
+  With `jsonColumn` the whole generated value is instead stored in that single (json/jsonb) column.
+
+| field | description |
+|---|---|
+| `driver` | `pgx` (aliases `postgres`, `postgresql`) or `mysql`. Optional with `--output postgres` / `mysql` |
+| `dsn` | connection string. `${VAR}` / `$VAR` are replaced with environment variables (an unset variable is an error), so passwords can stay out of the file. Escape a literal `$` by passing the DSN through an environment variable |
+| `table`, `jsonColumn` | insert mode, see above |
+| `statement` | statement mode, see above |
+| `timeout` | maximum duration of a single statement, default `10s` |
+| `maxOpenConns` | connection pool size, default `4` |
+| `onError` | `fatal` (default, jr stops at the first failed statement) or `skip` (log the error with its context and continue) |
+
+Example: `config.json`
+
+```json
+{
+  "driver": "pgx",
+  "dsn": "postgres://${PGUSER}:${PGPASSWORD}@localhost:5432/mydb?sslmode=disable",
+  "statement": "UPDATE inventory SET quantity = quantity - :qty WHERE id = :id"
+}
+```
+
+```bash
+export PGUSER=postgres PGPASSWORD=secret
+jr run --embedded '{"id": {{integer 1 100}}, "qty": {{integer 1 5}}}' \
+  --output postgres --sqlConfig config.json --seed 42 --frequency 200ms
+```
+
+More examples: [`config.json.example`](pkg/producers/sql/config.json.example) (statement mode) and
+[`config-insert.json.example`](pkg/producers/sql/config-insert.json.example) (insert mode).
 
 
 ## Distributed Testing
