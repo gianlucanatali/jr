@@ -1,0 +1,8 @@
+{
+  "driver": "pgx",
+  "dsn": "postgres://${PGUSER}:${PGPASSWORD}@localhost:5432/mydb?sslmode=disable",
+  "statement": "UPDATE inventory SET quantity = quantity - :qty WHERE id = :id",
+  "timeout": "10s",
+  "maxOpenConns": 4,
+  "onError": "fatal"
+}

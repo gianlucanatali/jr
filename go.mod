@@ -18,10 +18,12 @@ require (
 	github.com/elastic/go-elasticsearch/v8 v8.18.0
 	github.com/go-chi/chi/v5 v5.2.1
 	github.com/go-resty/resty/v2 v2.16.5
+	github.com/go-sql-driver/mysql v1.9.2
 	github.com/gocql/gocql v1.7.0
 	github.com/google/go-cmp v0.7.0
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/sessions v1.4.0
+	github.com/jackc/pgx/v5 v5.7.6
 	github.com/jarcoal/httpmock v1.4.0
 	github.com/redis/go-redis/v9 v9.7.3
 	github.com/rs/zerolog v1.34.0
@@ -92,7 +94,6 @@ require (
 	github.com/go-jose/go-jose/v4 v4.1.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/go-sql-driver/mysql v1.9.2 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
@@ -113,6 +114,9 @@ require (
 	github.com/hashicorp/go-secure-stdlib/strutil v0.1.2 // indirect
 	github.com/hashicorp/go-sockaddr v1.0.7 // indirect
 	github.com/hashicorp/vault/api v1.16.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
+	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect

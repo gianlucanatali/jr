@@ -1,0 +1,5 @@
+{
+  "driver": "pgx",
+  "dsn": "postgres://${PGUSER}:${PGPASSWORD}@localhost:5432/mydb?sslmode=disable",
+  "table": "public.users"
+}
