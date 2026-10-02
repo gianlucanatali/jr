@@ -122,6 +122,8 @@ jr template run --template "{{name}}"
 					configuration.GlobalCfg.HTTPConfig, _ = cmd.Flags().GetString(f.Name)
 				case "cassandraConfig":
 					configuration.GlobalCfg.CassandraConfig, _ = cmd.Flags().GetString(f.Name)
+				case "sqlConfig":
+					configuration.GlobalCfg.SQLConfig, _ = cmd.Flags().GetString(f.Name)
 				case "luascriptConfig":
 					configuration.GlobalCfg.LUAScriptConfig, _ = cmd.Flags().GetString(f.Name)
 				case "wasmConfig":
@@ -183,7 +185,7 @@ func init() {
 	templateRunCmd.Flags().StringP("topic", "t", constants.DEFAULT_TOPIC, "Kafka topic")
 
 	templateRunCmd.Flags().Bool("kcat", false, "If you want to pipe jr with kcat, use this flag: it is equivalent to --output stdout --outputTemplate '{{key}},{{value}}' --oneline")
-	templateRunCmd.Flags().StringP("output", "o", constants.DEFAULT_OUTPUT, "can be one of stdout, kafka, http, redis, mongo, elastic, s3, gcs, azblobstorage, azcosmosdb, cassandra, luascript, wasm, awsdynamodb")
+	templateRunCmd.Flags().StringP("output", "o", constants.DEFAULT_OUTPUT, "can be one of stdout, kafka, http, redis, mongo, elastic, s3, gcs, azblobstorage, azcosmosdb, cassandra, postgres, mysql, sql, luascript, wasm, awsdynamodb")
 	templateRunCmd.Flags().String("outputTemplate", constants.DEFAULT_OUTPUT_TEMPLATE, "Formatting of K,V on standard output")
 	templateRunCmd.Flags().BoolP("oneline", "l", false, "strips /n from output, for example to be pipelined to tools like kcat")
 	templateRunCmd.Flags().BoolP("autocreate", "a", false, "if enabled, autocreate topics")
@@ -203,6 +205,7 @@ func init() {
 	templateRunCmd.Flags().String("azBlobStorageConfig", "", "Azure Blob storage configuration")
 	templateRunCmd.Flags().String("azCosmosDBConfig", "", "Azure CosmosDB configuration")
 	templateRunCmd.Flags().String("cassandraConfig", "", "Cassandra configuration")
+	templateRunCmd.Flags().String("sqlConfig", "", "SQL database (postgres, mysql, sql) configuration")
 	templateRunCmd.Flags().String("luascriptConfig", "", "LUA Script configuration")
 	templateRunCmd.Flags().String("wasmConfig", "", "WASM configuration")
 	templateRunCmd.Flags().String("wampConfig", "", "WAMP configuration")

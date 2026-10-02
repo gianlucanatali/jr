@@ -46,6 +46,7 @@ import (
 	"github.com/jrnd-io/jr/pkg/producers/redis"
 	"github.com/jrnd-io/jr/pkg/producers/s3"
 	"github.com/jrnd-io/jr/pkg/producers/server"
+	sqlproducer "github.com/jrnd-io/jr/pkg/producers/sql"
 	"github.com/jrnd-io/jr/pkg/producers/wamp"
 	"github.com/jrnd-io/jr/pkg/producers/wamprpc"
 	"github.com/jrnd-io/jr/pkg/tpl"
@@ -171,6 +172,18 @@ func (e *Emitter) Initialize(ctx context.Context, conf configuration.GlobalConfi
 		e.Producer = createCassandraProducer(ctx, conf.CassandraConfig)
 		return
 	}
+	if e.Output == "postgres" || e.Output == "postgresql" {
+		e.Producer = createSQLProducer(ctx, conf.SQLConfig, sqlproducer.DriverPgx)
+		return
+	}
+	if e.Output == "mysql" {
+		e.Producer = createSQLProducer(ctx, conf.SQLConfig, sqlproducer.DriverMySQL)
+		return
+	}
+	if e.Output == "sql" {
+		e.Producer = createSQLProducer(ctx, conf.SQLConfig, "")
+		return
+	}
 	if e.Output == "luascript" {
 		e.Producer = createLUAScriptProducer(ctx, conf.LUAScriptConfig)
 		return
@@ -277,6 +290,13 @@ func createHTTPProducer(_ context.Context, httpConfig string) Producer {
 func createCassandraProducer(_ context.Context, config string) Producer {
 	producer := &cassandra.Producer{}
 	producer.Initialize(config)
+
+	return producer
+}
+
+func createSQLProducer(_ context.Context, config string, defaultDriver string) Producer {
+	producer := &sqlproducer.Producer{}
+	producer.InitializeWithDefaultDriver(config, defaultDriver)
 
 	return producer
 }

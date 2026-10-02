@@ -42,6 +42,7 @@ type GlobalConfiguration struct {
 	GCSConfig           string
 	HTTPConfig          string
 	CassandraConfig     string
+	SQLConfig           string
 	AWSDynamoDBConfig   string
 	LUAScriptConfig     string
 	WASMConfig          string
